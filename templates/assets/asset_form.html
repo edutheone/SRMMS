@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">
+            {% if object %}
+                Edit Asset
+            {% else %}
+                Add Asset
+            {% endif %}
+        </h2>
+
+        <p class="text-muted mb-0">
+            {% if object %}
+                Update the information for this asset.
+            {% else %}
+                Register a new organizational asset.
+            {% endif %}
+        </p>
+    </div>
+
+    <a href="{% url 'assets:asset_list' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Assets
+    </a>
+
+</div>
+
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+
+        <strong>
+            <i class="bi bi-box-seam"></i>
+
+            {% if object %}
+                Edit Asset Information
+            {% else %}
+                Asset Information
+            {% endif %}
+        </strong>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <!-- Display form errors -->
+
+            {% if form.non_field_errors %}
+
+                <div class="alert alert-danger">
+
+                    {% for error in form.non_field_errors %}
+
+                        {{ error }}
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Basic Information -->
+
+            <h5 class="mb-3 border-bottom pb-2">
+                <i class="bi bi-info-circle"></i>
+                Basic Information
+            </h5>
+
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Asset Name
+                    </label>
+
+                    {{ form.name }}
+
+                    {% if form.name.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.name.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Asset Tag
+                    </label>
+
+                    {{ form.asset_tag }}
+
+                    {% if form.asset_tag.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.asset_tag.errors }}
+                        </div>
+
+                    {% endif %}
+
+                    <small class="text-muted">
+                        Example: AST-0001
+                    </small>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Serial Number
+                    </label>
+
+                    {{ form.serial_number }}
+
+                    {% if form.serial_number.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.serial_number.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- Classification -->
+
+            <h5 class="mt-4 mb-3 border-bottom pb-2">
+
+                <i class="bi bi-tags"></i>
+
+                Classification
+
+            </h5>
+
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Asset Category
+                    </label>
+
+                    {{ form.category }}
+
+                    {% if form.category.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.category.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Department
+                    </label>
+
+                    {{ form.department }}
+
+                    {% if form.department.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.department.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- Location -->
+
+            <h5 class="mt-4 mb-3 border-bottom pb-2">
+
+                <i class="bi bi-geo-alt"></i>
+
+                Location & Status
+
+            </h5>
+
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Location
+                    </label>
+
+                    {{ form.location }}
+
+                    {% if form.location.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.location.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Status
+                    </label>
+
+                    {{ form.status }}
+
+                    {% if form.status.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.status.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- Purchase & Warranty -->
+
+            <h5 class="mt-4 mb-3 border-bottom pb-2">
+
+                <i class="bi bi-calendar-check"></i>
+
+                Purchase & Warranty
+
+            </h5>
+
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Purchase Date
+                    </label>
+
+                    {{ form.purchase_date }}
+
+                    {% if form.purchase_date.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.purchase_date.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Warranty Expiry
+                    </label>
+
+                    {{ form.warranty_expiry }}
+
+                    {% if form.warranty_expiry.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.warranty_expiry.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- Description -->
+
+            <h5 class="mt-4 mb-3 border-bottom pb-2">
+
+                <i class="bi bi-card-text"></i>
+
+                Description
+
+            </h5>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Asset Description
+                </label>
+
+                {{ form.description }}
+
+                {% if form.description.errors %}
+
+                    <div class="text-danger small mt-1">
+                        {{ form.description.errors }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Buttons -->
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <a
+                    href="{% url 'assets:asset_list' %}"
+                    class="btn btn-secondary"
+                >
+
+                    <i class="bi bi-x-circle"></i>
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+
+                    <i class="bi bi-check-circle"></i>
+
+                    {% if object %}
+                        Update Asset
+                    {% else %}
+                        Save Asset
+                    {% endif %}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ========================================== -->
+<!-- PAGE HEADER -->
+<!-- ========================================== -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">Dashboard</h2>
+
+        <p class="text-muted mb-0">
+            Welcome, {{ user.get_full_name|default:user.username }}
+        </p>
+    </div>
+
+    <span class="badge bg-primary fs-6">
+        {{ user.get_role_display }}
+    </span>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- ADMINISTRATOR DASHBOARD -->
+<!-- ========================================== -->
+
+{% if user_role == "ADMIN" %}
+
+<div class="row g-3">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Total Assets</h6>
+                <h2>{{ total_assets }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Total Requests</h6>
+                <h2>{{ total_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Work Orders</h6>
+                <h2>{{ total_work_orders }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Technicians</h6>
+                <h2>{{ total_technicians }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row g-3 mt-2">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Pending Requests</h6>
+                <h3>{{ pending_requests }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>In Progress</h6>
+                <h3>{{ in_progress_requests }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Resolved</h6>
+                <h3>{{ resolved_requests }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Departments</h6>
+                <h3>{{ total_departments }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- SUPERVISOR DASHBOARD -->
+<!-- ========================================== -->
+
+{% elif user_role == "SUPERVISOR" %}
+
+<div class="row g-3">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Pending Requests</h6>
+                <h2>{{ pending_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Assigned Requests</h6>
+                <h2>{{ assigned_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>In Progress</h6>
+                <h2>{{ in_progress_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Resolved</h6>
+                <h2>{{ resolved_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm mt-4">
+
+    <div class="card-header">
+        <strong>Requests by Department</strong>
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Department</th>
+                        <th>Total Requests</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for department in department_statistics %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>{{ department.name }}</td>
+
+                        <td>
+                            <span class="badge bg-primary">
+                                {{ department.request_count }}
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">
+                            No request statistics available.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- TECHNICIAN DASHBOARD -->
+<!-- ========================================== -->
+
+{% elif user_role == "TECHNICIAN" %}
+
+<div class="row g-3">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>My Requests</h6>
+                <h2>{{ my_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>My Work Orders</h6>
+                <h2>{{ my_work_orders }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>In Progress</h6>
+                <h2>{{ my_in_progress_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Resolved</h6>
+                <h2>{{ my_resolved_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm mt-4">
+
+    <div class="card-header">
+        <strong>Technician Workspace</strong>
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+            Manage your assigned service requests and work orders
+            from the navigation menu.
+        </p>
+
+        <a href="/requests_app/" class="btn btn-primary">
+            View Service Requests
+        </a>
+
+        <a href="/workorders/" class="btn btn-secondary">
+            View Work Orders
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- EMPLOYEE DASHBOARD -->
+<!-- ========================================== -->
+
+{% elif user_role == "EMPLOYEE" %}
+
+<div class="row g-3">
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h6>My Requests</h6>
+
+                <h2>{{ my_requests }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h6>Pending</h6>
+
+                <h2>{{ my_pending_requests }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h6>In Progress</h6>
+
+                <h2>{{ my_in_progress_requests }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h6>Resolved</h6>
+
+                <h2>{{ my_resolved_requests }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm mt-4">
+
+    <div class="card-header">
+
+        <strong>Employee Services</strong>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+
+            Submit a service request or check the progress of
+            your existing requests.
+
+        </p>
+
+        <a href="/requests_app/add/" class="btn btn-primary">
+
+            Submit Service Request
+
+        </a>
+
+        <a href="/requests_app/" class="btn btn-secondary">
+
+            My Service Requests
+
+        </a>
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">
+            {% if object %}
+                Edit Feedback
+            {% else %}
+                Add Feedback
+            {% endif %}
+        </h2>
+
+        <p class="text-muted mb-0">
+            {% if object %}
+                Update the feedback record.
+            {% else %}
+                Submit feedback about a completed service request.
+            {% endif %}
+        </p>
+    </div>
+
+    <a href="{% url 'feedback:list' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Feedback
+    </a>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-chat-square-text"></i>
+
+                    {% if object %}
+                        Edit Feedback
+                    {% else %}
+                        Feedback Form
+                    {% endif %}
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+
+                    <!-- Service Request -->
+
+                    <div class="mb-3">
+
+                        <label for="{{ form.service_request.id_for_label }}"
+                               class="form-label">
+
+                            Service Request
+
+                        </label>
+
+                        {{ form.service_request }}
+
+                        {% if form.service_request.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.service_request.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Submitted By -->
+
+                    <div class="mb-3">
+
+                        <label for="{{ form.submitted_by.id_for_label }}"
+                               class="form-label">
+
+                            Submitted By
+
+                        </label>
+
+                        {{ form.submitted_by }}
+
+                        {% if form.submitted_by.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.submitted_by.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Rating -->
+
+                    <div class="mb-3">
+
+                        <label for="{{ form.rating.id_for_label }}"
+                               class="form-label">
+
+                            Rating
+
+                        </label>
+
+                        {{ form.rating }}
+
+                        <div class="form-text">
+
+                            Rate the quality of service you received.
+
+                        </div>
+
+                        {% if form.rating.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.rating.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Comments -->
+
+                    <div class="mb-4">
+
+                        <label for="{{ form.comments.id_for_label }}"
+                               class="form-label">
+
+                            Comments
+
+                        </label>
+
+                        {{ form.comments }}
+
+                        <div class="form-text">
+
+                            Tell us about your experience and any
+                            suggestions for improvement.
+
+                        </div>
+
+                        {% if form.comments.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ form.comments.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Non-field errors -->
+
+                    {% if form.non_field_errors %}
+
+                        <div class="alert alert-danger">
+
+                            {{ form.non_field_errors }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Buttons -->
+
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <a
+                            href="{% url 'feedback:list' %}"
+                            class="btn btn-secondary"
+                        >
+
+                            <i class="bi bi-x-circle"></i>
+
+                            Cancel
+
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            <i class="bi bi-check-circle"></i>
+
+                            {% if object %}
+                                Update Feedback
+                            {% else %}
+                                Submit Feedback
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">Notifications</h2>
+
+        <p class="text-muted mb-0">
+            View your system notifications and important updates.
+        </p>
+    </div>
+
+    {% if notifications %}
+    <form method="post"
+          action="{% url 'notifications_app:mark_all_read' %}">
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="bi bi-check2-all"></i>
+            Mark All as Read
+        </button>
+    </form>
+    {% endif %}
+
+</div>
+
+
+<!-- Notifications -->
+
+<div class="card shadow-sm">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <strong>
+            <i class="bi bi-bell"></i>
+            My Notifications
+        </strong>
+
+        <span class="badge bg-primary">
+            {{ page_obj.paginator.count }}
+        </span>
+
+    </div>
+
+
+    <div class="card-body p-0">
+
+        {% for notification in notifications %}
+
+        <div class="p-4 border-bottom
+            {% if not notification.is_read %}
+                bg-light
+            {% endif %}
+        ">
+
+            <div class="row align-items-center">
+
+                <!-- Icon -->
+
+                <div class="col-auto">
+
+                    {% if notification.notification_type == "service_request" %}
+
+                        <div class="text-primary fs-2">
+                            <i class="bi bi-headset"></i>
+                        </div>
+
+                    {% elif notification.notification_type == "work_order" %}
+
+                        <div class="text-warning fs-2">
+                            <i class="bi bi-tools"></i>
+                        </div>
+
+                    {% elif notification.notification_type == "maintenance" %}
+
+                        <div class="text-success fs-2">
+                            <i class="bi bi-wrench-adjustable"></i>
+                        </div>
+
+                    {% else %}
+
+                        <div class="text-secondary fs-2">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Notification Content -->
+
+                <div class="col">
+
+                    <div class="d-flex justify-content-between">
+
+                        <h5 class="mb-1">
+
+                            {% if not notification.is_read %}
+                                <strong>
+                            {% endif %}
+
+                            {{ notification.title }}
+
+                            {% if not notification.is_read %}
+                                </strong>
+
+                                <span class="badge bg-primary ms-2">
+                                    New
+                                </span>
+                            {% endif %}
+
+                        </h5>
+
+
+                        <small class="text-muted">
+                            {{ notification.created_at|date:"d M Y, H:i" }}
+                        </small>
+
+                    </div>
+
+
+                    <p class="mb-2 text-muted">
+                        {{ notification.message }}
+                    </p>
+
+
+                    <div>
+
+                        <!-- Notification Type -->
+
+                        {% if notification.notification_type == "service_request" %}
+
+                            <span class="badge bg-primary">
+                                Service Request
+                            </span>
+
+                        {% elif notification.notification_type == "work_order" %}
+
+                            <span class="badge bg-warning text-dark">
+                                Work Order
+                            </span>
+
+                        {% elif notification.notification_type == "maintenance" %}
+
+                            <span class="badge bg-success">
+                                Maintenance
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                System
+                            </span>
+
+                        {% endif %}
+
+
+                        <!-- Priority -->
+
+                        {% if notification.priority == "critical" %}
+
+                            <span class="badge bg-danger">
+                                Critical
+                            </span>
+
+                        {% elif notification.priority == "high" %}
+
+                            <span class="badge bg-warning text-dark">
+                                High
+                            </span>
+
+                        {% elif notification.priority == "medium" %}
+
+                            <span class="badge bg-info text-dark">
+                                Medium
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                Low
+                            </span>
+
+                        {% endif %}
+
+
+                        <!-- Mark as Read -->
+
+                        {% if not notification.is_read %}
+
+                        <form method="post"
+                              action="{% url 'notifications_app:mark_read' notification.pk %}"
+                              class="d-inline ms-2">
+
+                            {% csrf_token %}
+
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-success">
+
+                                <i class="bi bi-check2"></i>
+                                Mark as Read
+
+                            </button>
+
+                        </form>
+
+                        {% else %}
+
+                            <span class="badge bg-light text-muted border ms-2">
+                                <i class="bi bi-check2"></i>
+                                Read
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% empty %}
+
+        <!-- No Notifications -->
+
+        <div class="text-center py-5">
+
+            <div class="mb-3">
+
+                <i class="bi bi-bell-slash text-muted"
+                   style="font-size: 4rem;">
+                </i>
+
+            </div>
+
+            <h5>
+                No notifications
+            </h5>
+
+            <p class="text-muted mb-0">
+                You don't have any notifications at the moment.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- Pagination -->
+
+{% if page_obj.has_other_pages %}
+
+<nav class="mt-4">
+
+    <ul class="pagination justify-content-center">
+
+        {% if page_obj.has_previous %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="?page={{ page_obj.previous_page_number }}">
+
+                Previous
+
+            </a>
+
+        </li>
+
+        {% else %}
+
+        <li class="page-item disabled">
+
+            <span class="page-link">
+                Previous
+            </span>
+
+        </li>
+
+        {% endif %}
+
+
+        {% for num in page_obj.paginator.page_range %}
+
+            {% if page_obj.number == num %}
+
+            <li class="page-item active">
+
+                <span class="page-link">
+                    {{ num }}
+                </span>
+
+            </li>
+
+            {% else %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ num }}">
+
+                    {{ num }}
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="?page={{ page_obj.next_page_number }}">
+
+                Next
+
+            </a>
+
+        </li>
+
+        {% else %}
+
+        <li class="page-item disabled">
+
+            <span class="page-link">
+                Next
+            </span>
+
+        </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+{% endif %}
+
+{% endblock %}

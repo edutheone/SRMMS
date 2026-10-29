@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            <div class="card shadow border-danger">
+
+                <div class="card-header bg-danger text-white">
+
+                    <h4 class="mb-0">
+                        Delete Department
+                    </h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p class="fs-5">
+
+                        Are you sure you want to delete
+
+                        <strong>{{ object.name }}</strong>?
+
+                    </p>
+
+                    <div class="alert alert-warning">
+
+                        This action cannot be undone.
+
+                    </div>
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+                        <button type="submit" class="btn btn-danger">
+
+                            Yes, Delete
+
+                        </button>
+
+                        <a href="{% url 'departments:list' %}" class="btn btn-secondary">
+
+                            Cancel
+
+                        </a>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

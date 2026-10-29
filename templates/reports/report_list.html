@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">
+            System Reports Dashboard
+        </h2>
+
+        <p class="text-muted mb-0">
+            View statistics and reports for the Service Request & Maintenance Management System.
+        </p>
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- REPORT FILTERS -->
+<!-- ========================================= -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-light">
+        <strong>
+            <i class="bi bi-funnel"></i>
+            Report Filters
+        </strong>
+    </div>
+
+    <div class="card-body">
+
+        <form method="get">
+
+            <div class="row">
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Report Type</label>
+                    {{ form.report_type }}
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Date From</label>
+                    {{ form.date_from }}
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Date To</label>
+                    {{ form.date_to }}
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Status</label>
+                    {{ form.status }}
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Priority</label>
+                    {{ form.priority }}
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-bar-chart"></i>
+                Generate Report
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- SUMMARY CARDS -->
+<!-- ========================================= -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-start border-primary border-4">
+            <div class="card-body text-center">
+                <i class="bi bi-headset fs-1 text-primary"></i>
+                <h6 class="mt-2">Service Requests</h6>
+                <h2>{{ total_requests }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-start border-success border-4">
+            <div class="card-body text-center">
+                <i class="bi bi-box-seam fs-1 text-success"></i>
+                <h6 class="mt-2">Assets</h6>
+                <h2>{{ total_assets }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-start border-warning border-4">
+            <div class="card-body text-center">
+                <i class="bi bi-tools fs-1 text-warning"></i>
+                <h6 class="mt-2">Work Orders</h6>
+                <h2>{{ total_work_orders }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-start border-danger border-4">
+            <div class="card-body text-center">
+                <i class="bi bi-wrench-adjustable fs-1 text-danger"></i>
+                <h6 class="mt-2">Maintenance</h6>
+                <h2>{{ total_maintenance }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- SERVICE REQUEST STATUS -->
+<!-- ========================================= -->
+
+<div class="row">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-primary text-white">
+                <strong>Service Request Status Summary</strong>
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-bordered mb-0">
+
+                    <tbody>
+
+                        <tr>
+                            <th>Pending</th>
+                            <td class="text-end">
+                                <span class="badge bg-secondary">{{ pending_requests }}</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Assigned</th>
+                            <td class="text-end">
+                                <span class="badge bg-info">{{ assigned_requests }}</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>In Progress</th>
+                            <td class="text-end">
+                                <span class="badge bg-warning text-dark">{{ in_progress_requests }}</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Resolved</th>
+                            <td class="text-end">
+                                <span class="badge bg-success">{{ resolved_requests }}</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Closed</th>
+                            <td class="text-end">
+                                <span class="badge bg-dark">{{ closed_requests }}</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- WORK ORDER SUMMARY -->
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-warning text-dark">
+                <strong>Work Order Summary</strong>
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-bordered mb-0">
+
+                    <tbody>
+
+                        <tr>
+                            <th>Total Work Orders</th>
+                            <td class="text-end">{{ total_work_orders }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Pending Work Orders</th>
+                            <td class="text-end">{{ pending_work_orders }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Completed Work Orders</th>
+                            <td class="text-end">{{ completed_work_orders }}</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- FEEDBACK SUMMARY -->
+<!-- ========================================= -->
+
+<div class="row">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-success text-white">
+                <strong>Feedback Summary</strong>
+            </div>
+
+            <div class="card-body">
+
+                <div class="text-center mb-4">
+
+                    <h6>Average Rating</h6>
+
+                    <h2 class="text-success">
+
+                        {{ average_rating|floatformat:1 }}/5
+
+                    </h2>
+
+                </div>
+
+                <table class="table table-bordered">
+
+                    <tbody>
+
+                        <tr>
+                            <th>⭐⭐⭐⭐⭐ (5)</th>
+                            <td class="text-end">{{ five_star }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>⭐⭐⭐⭐ (4)</th>
+                            <td class="text-end">{{ four_star }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>⭐⭐⭐ (3)</th>
+                            <td class="text-end">{{ three_star }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>⭐⭐ (2)</th>
+                            <td class="text-end">{{ two_star }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>⭐ (1)</th>
+                            <td class="text-end">{{ one_star }}</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SYSTEM SUMMARY -->
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-info text-white">
+                <strong>System Summary</strong>
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-bordered">
+
+                    <tbody>
+
+                        <tr>
+                            <th>Total Assets</th>
+                            <td class="text-end">{{ total_assets }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Total Departments</th>
+                            <td class="text-end">{{ total_departments }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Total Maintenance Records</th>
+                            <td class="text-end">{{ total_maintenance }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Total Feedback</th>
+                            <td class="text-end">{{ total_feedback }}</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- REQUESTS BY DEPARTMENT -->
+<!-- ========================================= -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-dark text-white">
+        <strong>Service Requests by Department</strong>
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th>#</th>
+                        <th>Department</th>
+                        <th>Total Requests</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for department in department_statistics %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>{{ department.name }}</td>
+
+                        <td>
+                            <span class="badge bg-primary">
+                                {{ department.request_count }}
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="3" class="text-center py-4 text-muted">
+                            No department statistics available.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- EXPORT PLACEHOLDERS -->
+<!-- ========================================= -->
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-light">
+        <strong>Export Reports</strong>
+    </div>
+
+    <div class="card-body">
+
+        <div class="d-flex gap-2 flex-wrap">
+
+            <button class="btn btn-success" disabled>
+                <i class="bi bi-file-earmark-excel"></i>
+                Export Excel (Coming Soon)
+            </button>
+
+            <button class="btn btn-danger" disabled>
+                <i class="bi bi-file-earmark-pdf"></i>
+                Export PDF (Coming Soon)
+            </button>
+
+            <button class="btn btn-primary" disabled>
+                <i class="bi bi-printer"></i>
+                Print Report (Coming Soon)
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

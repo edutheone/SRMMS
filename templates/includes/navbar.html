@@ -1,0 +1,62 @@
+<nav class="navbar navbar-dark bg-primary">
+
+    <div class="container-fluid">
+
+        <!-- SRMMS Brand -->
+        <a class="navbar-brand fw-bold"
+           href="{% url 'dashboard:index' %}">
+            SRMMS
+        </a>
+
+
+        <div class="d-flex align-items-center gap-3">
+
+            <!-- Notifications -->
+            <a href="{% url 'notifications_app:list' %}"
+               class="text-white text-decoration-none position-relative"
+               title="Notifications">
+
+                <i class="bi bi-bell fs-5"></i>
+
+                {% if unread_notification_count > 0 %}
+
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+                        {{ unread_notification_count }}
+
+                        <span class="visually-hidden">
+                            unread notifications
+                        </span>
+
+                    </span>
+
+                {% endif %}
+
+            </a>
+
+
+            <!-- User Information -->
+            <div class="text-white">
+
+                {{ request.user.get_full_name }}
+
+                |
+
+                {{ request.user.role }}
+
+                |
+
+                <a href="{% url 'accounts:logout' %}"
+                   class="text-white text-decoration-none">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>

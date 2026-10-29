@@ -1,0 +1,496 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="mb-1">
+
+            {% if object %}
+                Edit Work Order
+            {% else %}
+                Create Work Order
+            {% endif %}
+
+        </h2>
+
+        <p class="text-muted mb-0">
+
+            {% if object %}
+                Update the work order information below.
+            {% else %}
+                Create a work order from the selected service request.
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'workorders:list' %}"
+        class="btn btn-secondary"
+    >
+        <i class="bi bi-arrow-left"></i>
+        Back to Work Orders
+    </a>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-9">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-tools"></i>
+
+                    {% if object %}
+                        Edit Work Order
+                    {% else %}
+                        New Work Order
+                    {% endif %}
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+
+                    <!-- Non-field Errors -->
+
+                    {% if form.non_field_errors %}
+
+                        <div class="alert alert-danger">
+
+                            {% for error in form.non_field_errors %}
+
+                                <div>
+                                    {{ error }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Work Order Number -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.work_order_number.id_for_label }}"
+                            class="form-label"
+                        >
+                            Work Order Number
+                        </label>
+
+                        {{ form.work_order_number }}
+
+                        {% if form.work_order_number.errors %}
+
+                            <div class="text-danger small">
+                                {{ form.work_order_number.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Title -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.title.id_for_label }}"
+                            class="form-label"
+                        >
+                            Title
+                        </label>
+
+                        {{ form.title }}
+
+                        {% if form.title.errors %}
+
+                            <div class="text-danger small">
+                                {{ form.title.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Description -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.description.id_for_label }}"
+                            class="form-label"
+                        >
+                            Description
+                        </label>
+
+                        {{ form.description }}
+
+                        {% if form.description.errors %}
+
+                            <div class="text-danger small">
+                                {{ form.description.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Service Request + Asset -->
+
+                    <div class="row">
+
+                        <!-- Service Request -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label
+                                for="{{ form.service_request.id_for_label }}"
+                                class="form-label"
+                            >
+                                Service Request
+                            </label>
+
+                            {{ form.service_request }}
+
+                            {% if form.service_request.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.service_request.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Asset -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label
+                                for="{{ form.asset.id_for_label }}"
+                                class="form-label"
+                            >
+                                Asset
+                            </label>
+
+                            {{ form.asset }}
+
+                            {% if form.asset.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.asset.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Department + Location -->
+
+                    <div class="row">
+
+                        <!-- Department -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label
+                                for="{{ form.department.id_for_label }}"
+                                class="form-label"
+                            >
+                                Department
+                            </label>
+
+                            {{ form.department }}
+
+                            {% if form.department.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.department.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Location -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label
+                                for="{{ form.location.id_for_label }}"
+                                class="form-label"
+                            >
+                                Location
+                            </label>
+
+                            {{ form.location }}
+
+                            {% if form.location.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.location.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Technician + Priority + Status -->
+
+                    <div class="row">
+
+                        <!-- Assigned To -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label
+                                for="{{ form.assigned_to.id_for_label }}"
+                                class="form-label"
+                            >
+                                Assign Technician
+                            </label>
+
+                            {{ form.assigned_to }}
+
+                            {% if form.assigned_to.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.assigned_to.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Priority -->
+
+                        <div class="col-md-3 mb-3">
+
+                            <label
+                                for="{{ form.priority.id_for_label }}"
+                                class="form-label"
+                            >
+                                Priority
+                            </label>
+
+                            {{ form.priority }}
+
+                            {% if form.priority.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.priority.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Status -->
+
+                        <div class="col-md-3 mb-3">
+
+                            <label
+                                for="{{ form.status.id_for_label }}"
+                                class="form-label"
+                            >
+                                Status
+                            </label>
+
+                            {{ form.status }}
+
+                            {% if form.status.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.status.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Work Description -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.work_description.id_for_label }}"
+                            class="form-label"
+                        >
+                            Work Description
+                        </label>
+
+                        {{ form.work_description }}
+
+                        {% if form.work_description.errors %}
+
+                            <div class="text-danger small">
+                                {{ form.work_description.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Completion Notes -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.completion_notes.id_for_label }}"
+                            class="form-label"
+                        >
+                            Completion Notes
+                        </label>
+
+                        {{ form.completion_notes }}
+
+                        {% if form.completion_notes.errors %}
+
+                            <div class="text-danger small">
+                                {{ form.completion_notes.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Scheduled + Completed Dates -->
+
+                    <div class="row">
+
+                        <!-- Scheduled Date -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label
+                                for="{{ form.scheduled_date.id_for_label }}"
+                                class="form-label"
+                            >
+                                Scheduled Date
+                            </label>
+
+                            {{ form.scheduled_date }}
+
+                            {% if form.scheduled_date.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.scheduled_date.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Completed Date -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label
+                                for="{{ form.completed_date.id_for_label }}"
+                                class="form-label"
+                            >
+                                Completed Date
+                            </label>
+
+                            {{ form.completed_date }}
+
+                            {% if form.completed_date.errors %}
+
+                                <div class="text-danger small">
+                                    {{ form.completed_date.errors }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+
+                        <a
+                            href="{% url 'workorders:list' %}"
+                            class="btn btn-secondary"
+                        >
+                            <i class="bi bi-x-circle"></i>
+                            Cancel
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            {% if object %}
+
+                                <i class="bi bi-check-circle"></i>
+                                Update Work Order
+
+                            {% else %}
+
+                                <i class="bi bi-plus-circle"></i>
+                                Create Work Order
+
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

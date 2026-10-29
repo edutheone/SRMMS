@@ -1,0 +1,432 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">
+            {% if object %}
+                Edit Service Request
+            {% else %}
+                Add Service Request
+            {% endif %}
+        </h2>
+
+        <p class="text-muted mb-0">
+            {% if object %}
+                Update the details of this service request.
+            {% else %}
+                Create a new service request.
+            {% endif %}
+        </p>
+    </div>
+
+    <a href="{% url 'requests_app:list' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Requests
+    </a>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-9">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-tools"></i>
+
+                    {% if object %}
+                        Edit Request
+                    {% else %}
+                        Service Request Details
+                    {% endif %}
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+
+                    <!-- General Information -->
+
+                    <h6 class="text-primary border-bottom pb-2 mb-3">
+                        <i class="bi bi-info-circle"></i>
+                        Request Information
+                    </h6>
+
+
+                    <div class="row g-3">
+
+
+                        <!-- Request Number -->
+
+                        <div class="col-md-6">
+
+                            <label for="{{ form.request_number.id_for_label }}"
+                                   class="form-label">
+
+                                Request Number
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            {{ form.request_number }}
+
+                            {% if form.request_number.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.request_number.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Title -->
+
+                        <div class="col-md-6">
+
+                            <label for="{{ form.title.id_for_label }}"
+                                   class="form-label">
+
+                                Request Title
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            {{ form.title }}
+
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="col-12">
+
+                            <label for="{{ form.description.id_for_label }}"
+                                   class="form-label">
+
+                                Description
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            {{ form.description }}
+
+                            {% if form.description.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Requester -->
+
+                        <div class="col-md-6">
+
+                            <label for="{{ form.requester.id_for_label }}"
+                                   class="form-label">
+
+                                Requester
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            {{ form.requester }}
+
+                            {% if form.requester.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.requester.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Department -->
+
+                        <div class="col-md-6">
+
+                            <label for="{{ form.department.id_for_label }}"
+                                   class="form-label">
+
+                                Department
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            {{ form.department }}
+
+                            {% if form.department.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.department.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Asset -->
+
+                        <div class="col-md-6">
+
+                            <label for="{{ form.asset.id_for_label }}"
+                                   class="form-label">
+
+                                Related Asset
+
+                            </label>
+
+                            {{ form.asset }}
+
+                            <small class="text-muted">
+                                Optional. Select the asset related to this request.
+                            </small>
+
+                            {% if form.asset.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.asset.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Location -->
+
+                        <div class="col-md-6">
+
+                            <label for="{{ form.location.id_for_label }}"
+                                   class="form-label">
+
+                                Location
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            {{ form.location }}
+
+                            {% if form.location.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.location.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Priority & Status -->
+
+                    <h6 class="text-primary border-bottom pb-2 mb-3 mt-4">
+
+                        <i class="bi bi-flag"></i>
+                        Request Status
+
+                    </h6>
+
+
+                    <div class="row g-3">
+
+
+                        <!-- Priority -->
+
+                        <div class="col-md-4">
+
+                            <label for="{{ form.priority.id_for_label }}"
+                                   class="form-label">
+
+                                Priority
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            {{ form.priority }}
+
+                            {% if form.priority.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.priority.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Status -->
+
+                        <div class="col-md-4">
+
+                            <label for="{{ form.status.id_for_label }}"
+                                   class="form-label">
+
+                                Status
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            {{ form.status }}
+
+                            {% if form.status.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.status.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Assigned To -->
+
+                        <div class="col-md-4">
+
+                            <label for="{{ form.assigned_to.id_for_label }}"
+                                   class="form-label">
+
+                                Assigned Technician
+
+                            </label>
+
+                            {{ form.assigned_to }}
+
+                            {% if form.assigned_to.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.assigned_to.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Resolution Notes -->
+
+                        <div class="col-12">
+
+                            <label for="{{ form.resolution_notes.id_for_label }}"
+                                   class="form-label">
+
+                                Resolution Notes
+
+                            </label>
+
+                            {{ form.resolution_notes }}
+
+                            <small class="text-muted">
+                                Enter resolution details when the request has been handled.
+                            </small>
+
+                            {% if form.resolution_notes.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.resolution_notes.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Date Resolved -->
+
+                        <div class="col-md-6">
+
+                            <label for="{{ form.date_resolved.id_for_label }}"
+                                   class="form-label">
+
+                                Date Resolved
+
+                            </label>
+
+                            {{ form.date_resolved }}
+
+                            {% if form.date_resolved.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.date_resolved.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Non-field Errors -->
+
+                    {% if form.non_field_errors %}
+
+                        <div class="alert alert-danger mt-4">
+
+                            {{ form.non_field_errors }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Buttons -->
+
+                    <div class="border-top mt-4 pt-3">
+
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <a
+                                href="{% url 'requests_app:list' %}"
+                                class="btn btn-secondary"
+                            >
+
+                                <i class="bi bi-x-circle"></i>
+                                Cancel
+
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+
+                                {% if object %}
+
+                                    <i class="bi bi-check-circle"></i>
+                                    Update Request
+
+                                {% else %}
+
+                                    <i class="bi bi-plus-circle"></i>
+                                    Create Request
+
+                                {% endif %}
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

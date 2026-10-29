@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="mb-1">
+            {% if object %}
+                Edit Asset Category
+            {% else %}
+                Add Asset Category
+            {% endif %}
+        </h2>
+
+        <p class="text-muted mb-0">
+            {% if object %}
+                Update the details of this asset category.
+            {% else %}
+                Create a category for classifying organizational assets.
+            {% endif %}
+        </p>
+    </div>
+
+    <a href="{% url 'assets:list' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Categories
+    </a>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-tags"></i>
+
+                    {% if object %}
+                        Edit Category
+                    {% else %}
+                        Category Details
+                    {% endif %}
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+
+                    <!-- Name -->
+
+                    <div class="mb-3">
+
+                        <label for="{{ form.name.id_for_label }}"
+                               class="form-label">
+
+                            Category Name
+
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        {{ form.name }}
+
+                        {% if form.name.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.name.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Description -->
+
+                    <div class="mb-3">
+
+                        <label for="{{ form.description.id_for_label }}"
+                               class="form-label">
+
+                            Description
+
+                        </label>
+
+                        {{ form.description }}
+
+                        <div class="form-text">
+
+                            Briefly describe the type of assets that belong
+                            to this category.
+
+                        </div>
+
+                        {% if form.description.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.description.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="mb-4">
+
+                        <div class="form-check">
+
+                            {{ form.is_active }}
+
+                            <label
+                                class="form-check-label"
+                                for="{{ form.is_active.id_for_label }}"
+                            >
+
+                                Active Category
+
+                            </label>
+
+                        </div>
+
+                        <div class="form-text">
+
+                            Active categories can be selected when registering
+                            assets.
+
+                        </div>
+
+                        {% if form.is_active.errors %}
+
+                            <div class="text-danger small mt-1">
+
+                                {{ form.is_active.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <a
+                            href="{% url 'assets:list' %}"
+                            class="btn btn-secondary"
+                        >
+
+                            <i class="bi bi-x-circle"></i>
+
+                            Cancel
+
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            {% if object %}
+
+                                <i class="bi bi-check-circle"></i>
+                                Update Category
+
+                            {% else %}
+
+                                <i class="bi bi-plus-circle"></i>
+                                Add Category
+
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

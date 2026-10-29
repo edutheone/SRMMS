@@ -1,0 +1,741 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Services | SRMMS</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- SRMMS Chatbot Styling -->
+    <style>
+        /* Floating chatbot button */
+        #srmms-chatbot-button {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 1060;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #srmms-chatbot-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Floating chatbot window */
+        #srmms-chatbot-panel {
+            position: fixed;
+            right: 24px;
+            bottom: 90px;
+            z-index: 1061;
+
+            display: flex;
+            flex-direction: column;
+
+            width: 380px;
+            max-width: calc(100vw - 32px);
+            height: 500px;
+            max-height: calc(100vh - 125px);
+
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 16px;
+            overflow: hidden;
+
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+        }
+
+        #srmms-chatbot-panel.d-none {
+            display: none !important;
+        }
+
+        /* Chatbot header */
+        #srmms-chatbot-panel .chatbot-header {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 15px 18px;
+            color: #ffffff;
+            background: #0d6efd;
+        }
+
+        #srmms-chatbot-panel .chatbot-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        #srmms-chatbot-panel .chatbot-status {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.78rem;
+            opacity: 0.9;
+        }
+
+        /* Scrollable chat content */
+        #srmms-chatbot-panel .chatbot-body {
+            flex: 1;
+            min-height: 0;
+            padding: 18px;
+            overflow-y: auto;
+            overflow-wrap: anywhere;
+            background: #f8f9fa;
+        }
+
+        #srmms-chatbot-panel .chatbot-welcome {
+            padding: 14px;
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            line-height: 1.6;
+        }
+
+        #srmms-chatbot-panel .chatbot-footer {
+            flex-shrink: 0;
+            padding: 12px 15px;
+            background: #ffffff;
+            border-top: 1px solid #dee2e6;
+        }
+
+        #srmms-chatbot-panel .chatbot-footer small {
+            display: block;
+            color: #6c757d;
+        }
+
+        /* Keyboard focus */
+        #srmms-chatbot-button:focus-visible,
+        #srmms-chatbot-panel button:focus-visible {
+            outline: 3px solid #ffc107;
+            outline-offset: 3px;
+        }
+
+        /* Tablet and phone layout */
+        @media (max-width: 767.98px) {
+            #srmms-chatbot-button {
+                right: 15px;
+                bottom: 15px;
+                padding: 12px 16px;
+            }
+
+            #srmms-chatbot-panel {
+                right: 10px;
+                bottom: 78px;
+                width: calc(100vw - 20px);
+                max-width: none;
+                height: min(520px, calc(100dvh - 100px));
+                max-height: calc(100dvh - 100px);
+                border-radius: 14px;
+            }
+
+            #srmms-chatbot-panel .chatbot-header {
+                padding: 13px 15px;
+            }
+
+            #srmms-chatbot-panel .chatbot-body {
+                padding: 14px;
+            }
+        }
+
+        /* Very short screens */
+        @media (max-height: 450px) {
+            #srmms-chatbot-panel {
+                height: calc(100dvh - 90px);
+                max-height: calc(100dvh - 90px);
+                bottom: 75px;
+            }
+
+            #srmms-chatbot-button {
+                bottom: 10px;
+            }
+        }
+
+        /* Respect reduced motion settings */
+        @media (prefers-reduced-motion: reduce) {
+            #srmms-chatbot-button {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Main navigation -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- Main application layout -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Role-based sidebar -->
+            {% include 'includes/sidebar.html' %}
+
+            <!-- Current module content -->
+            <main class="col-md-10 ms-sm-auto px-4 py-4">
+
+                <!-- Django success and error messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                             role="alert">
+
+                            {{ message }}
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close">
+                            </button>
+
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% block content %}
+                {% endblock %}
+
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+
+    <!-- Notification popup container -->
+    <div id="notification-popup-container"
+         class="position-fixed top-0 end-0 p-3"
+         style="z-index: 1070; width: 380px; max-width: 100%; pointer-events: none;">
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- FLOATING CHATBOT FOR AUTHENTICATED USERS -->
+    <!-- ========================================= -->
+
+    {% if user.is_authenticated %}
+
+        <!-- Floating button -->
+        <button type="button"
+                id="srmms-chatbot-button"
+                class="btn btn-primary"
+                aria-controls="srmms-chatbot-panel"
+                aria-expanded="false">
+
+            <i class="bi bi-robot fs-5" aria-hidden="true"></i>
+            <span>SRMMS Assistant</span>
+
+        </button>
+
+        <!-- Chatbot overlay -->
+        <section id="srmms-chatbot-panel"
+                 class="d-none"
+                 role="dialog"
+                 aria-modal="false"
+                 aria-labelledby="srmms-chatbot-title">
+
+            <!-- Header -->
+            <div class="chatbot-header">
+
+                <div>
+                    <h2 id="srmms-chatbot-title"
+                        class="chatbot-title">
+
+                        <i class="bi bi-robot me-2"
+                           aria-hidden="true"></i>
+
+                        SRMMS Assistant
+
+                    </h2>
+
+                    <span class="chatbot-status">
+                        System help and guidance
+                    </span>
+                </div>
+
+                <button type="button"
+                        id="srmms-chatbot-close"
+                        class="btn btn-sm btn-light"
+                        aria-label="Close chatbot">
+
+                    <i class="bi bi-x-lg"
+                       aria-hidden="true"></i>
+
+                </button>
+
+            </div>
+
+            <!-- Chat content -->
+            
+<!-- Chat content -->
+<div class="chatbot-body" id="srmms-chatbot-messages" aria-live="polite">
+
+    <div class="chatbot-welcome mb-3">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-robot fs-4 text-primary" aria-hidden="true"></i>
+            <strong>
+                Hello, {{ user.get_short_name|default:user.username }}!
+            </strong>
+        </div>
+
+        <p class="mb-0">
+            Welcome to SRMMS. Ask me about service requests, assets,
+            work orders, maintenance, reports or notifications.
+        </p>
+    </div>
+
+    <div id="srmms-chatbot-message-list"></div>
+
+    <div id="srmms-chatbot-status"
+         class="small text-muted mt-2"
+         role="status"
+         aria-live="polite"></div>
+</div>
+
+<!-- Chat footer and message form -->
+<div class="chatbot-footer">
+
+    <form id="srmms-chatbot-form">
+        {% csrf_token %}
+
+        <label for="srmms-chatbot-input" class="visually-hidden">
+            Type your message
+        </label>
+
+        <div class="input-group">
+            <textarea
+                id="srmms-chatbot-input"
+                name="message"
+                class="form-control"
+                rows="1"
+                maxlength="1000"
+                placeholder="Ask SRMMS Assistant..."
+                aria-label="Type your message"
+                required></textarea>
+
+            <button
+                type="submit"
+                id="srmms-chatbot-send"
+                class="btn btn-primary"
+                aria-label="Send message">
+                <i class="bi bi-send-fill" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <small class="mt-2">
+            Press Enter to send. Use Shift + Enter for a new line.
+        </small>
+    </form>
+
+</div>
+
+
+        </section>
+
+    {% endif %}
+
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- ========================================= -->
+    <!-- FLOATING CHATBOT BEHAVIOUR -->
+    <!-- ========================================= -->
+
+    
+{% if user.is_authenticated %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chatButton = document.getElementById("srmms-chatbot-button");
+    const chatPanel = document.getElementById("srmms-chatbot-panel");
+    const closeButton = document.getElementById("srmms-chatbot-close");
+
+    const chatForm = document.getElementById("srmms-chatbot-form");
+    const chatInput = document.getElementById("srmms-chatbot-input");
+    const sendButton = document.getElementById("srmms-chatbot-send");
+    const messageList = document.getElementById("srmms-chatbot-message-list");
+    const chatMessages = document.getElementById("srmms-chatbot-messages");
+    const chatStatus = document.getElementById("srmms-chatbot-status");
+
+    if (!chatButton || !chatPanel || !closeButton) {
+        return;
+    }
+
+    function openChatbot() {
+        chatPanel.classList.remove("d-none");
+        chatButton.setAttribute("aria-expanded", "true");
+
+        if (chatInput) {
+            chatInput.focus();
+        }
+    }
+
+    function closeChatbot(returnFocus = true) {
+        chatPanel.classList.add("d-none");
+        chatButton.setAttribute("aria-expanded", "false");
+
+        if (returnFocus) {
+            chatButton.focus();
+        }
+    }
+
+    chatButton.addEventListener("click", function () {
+        if (chatPanel.classList.contains("d-none")) {
+            openChatbot();
+        } else {
+            closeChatbot();
+        }
+    });
+
+    closeButton.addEventListener("click", function () {
+        closeChatbot();
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (
+            event.key === "Escape" &&
+            !chatPanel.classList.contains("d-none")
+        ) {
+            closeChatbot();
+        }
+    });
+
+    if (!chatForm || !chatInput || !sendButton || !messageList) {
+        return;
+    }
+
+    const csrfInput = chatForm.querySelector(
+        'input[name="csrfmiddlewaretoken"]'
+    );
+
+    function addMessage(text, sender) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "mb-3 d-flex " +
+            (sender === "user" ? "justify-content-end" : "justify-content-start");
+
+        const bubble = document.createElement("div");
+        bubble.className = "p-3 rounded-3";
+        bubble.style.maxWidth = "88%";
+        bubble.style.whiteSpace = "pre-wrap";
+        bubble.style.overflowWrap = "anywhere";
+
+        if (sender === "user") {
+            bubble.classList.add("bg-primary", "text-white");
+        } else {
+            bubble.classList.add("bg-white", "border", "text-dark");
+        }
+
+        // Use textContent so messages cannot inject HTML or scripts.
+        bubble.textContent = text;
+
+        const label = document.createElement("div");
+        label.className = "small fw-semibold mb-1";
+        label.textContent = sender === "user" ? "You" : "SRMMS Assistant";
+
+        bubble.prepend(label);
+        wrapper.appendChild(bubble);
+        messageList.appendChild(wrapper);
+
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    chatForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const message = chatInput.value.trim();
+
+        if (!message) {
+            chatInput.focus();
+            return;
+        }
+
+        if (message.length > 1000) {
+            chatStatus.textContent = "Please keep your message under 1000 characters.";
+            return;
+        }
+
+        if (!csrfInput) {
+            chatStatus.textContent =
+                "Security token not found. Refresh the page and try again.";
+            return;
+        }
+
+        addMessage(message, "user");
+        chatInput.value = "";
+        chatStatus.textContent = "SRMMS Assistant is responding...";
+        sendButton.disabled = true;
+        chatInput.disabled = true;
+
+        try {
+            const response = await fetch("{% url 'chatbot:message' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfInput.value,
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error || "Unable to send your message."
+                );
+            }
+
+            addMessage(data.response, "assistant");
+            chatStatus.textContent = "";
+
+        } catch (error) {
+            chatStatus.textContent =
+                error.message || "Connection problem. Please try again.";
+        } finally {
+            sendButton.disabled = false;
+            chatInput.disabled = false;
+            chatInput.focus();
+        }
+    });
+
+    // Enter sends; Shift + Enter inserts a new line.
+    chatInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+
+            if (chatForm.requestSubmit) {
+                chatForm.requestSubmit();
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+
+
+
+    <!-- ========================================= -->
+    <!-- NOTIFICATION POPUP BEHAVIOUR -->
+    <!-- ========================================= -->
+
+    {% if user.is_authenticated %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const popupContainer = document.getElementById(
+                "notification-popup-container"
+            );
+
+            if (!popupContainer) {
+                return;
+            }
+
+            const storageKey = "srmms_displayed_notifications";
+
+            let displayedNotifications = [];
+
+            try {
+                displayedNotifications = JSON.parse(
+                    localStorage.getItem(storageKey) || "[]"
+                );
+
+                if (!Array.isArray(displayedNotifications)) {
+                    displayedNotifications = [];
+                }
+
+            } catch (error) {
+                displayedNotifications = [];
+            }
+
+            function saveDisplayedNotifications() {
+
+                displayedNotifications =
+                    displayedNotifications.slice(-100);
+
+                try {
+                    localStorage.setItem(
+                        storageKey,
+                        JSON.stringify(displayedNotifications)
+                    );
+                } catch (error) {
+                    // Notifications can still display if storage is unavailable.
+                }
+
+            }
+
+            function escapeHtml(value) {
+
+                const element = document.createElement("div");
+
+                element.textContent = String(value ?? "");
+
+                return element.innerHTML;
+            }
+
+            function showNotification(notification) {
+
+                if (
+                    displayedNotifications.includes(notification.id)
+                ) {
+                    return;
+                }
+
+                displayedNotifications.push(notification.id);
+
+                saveDisplayedNotifications();
+
+                const popup = document.createElement("div");
+
+                popup.className =
+                    "alert alert-primary alert-dismissible fade show shadow mb-3";
+
+                popup.style.pointerEvents = "auto";
+
+                popup.innerHTML = `
+                    <div class="d-flex">
+
+                        <div class="me-3">
+                            <i class="bi bi-bell-fill fs-4"></i>
+                        </div>
+
+                        <div class="flex-grow-1">
+
+                            <div class="fw-bold mb-1">
+                                ${escapeHtml(notification.title)}
+                            </div>
+
+                            <div class="small">
+                                ${escapeHtml(notification.message)}
+                            </div>
+
+                            <div class="text-muted small mt-2">
+                                ${escapeHtml(notification.created_at)}
+                            </div>
+
+                            <a href="{% url 'notifications_app:list' %}"
+                               class="btn btn-sm btn-primary mt-2">
+
+                                View Notifications
+
+                            </a>
+
+                        </div>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close">
+                        </button>
+
+                    </div>
+                `;
+
+                popupContainer.appendChild(popup);
+
+                setTimeout(function () {
+
+                    if (popup.parentNode) {
+
+                        popup.classList.remove("show");
+
+                        setTimeout(function () {
+
+                            if (popup.parentNode) {
+                                popup.remove();
+                            }
+
+                        }, 300);
+                    }
+
+                }, 10000);
+
+            }
+
+            async function checkNotifications() {
+
+                try {
+
+                    const response = await fetch(
+                        "{% url 'notifications_app:popup' %}",
+                        {
+                            method: "GET",
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest"
+                            }
+                        }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error(
+                            "Notification request failed"
+                        );
+                    }
+
+                    const data = await response.json();
+
+                    if (
+                        data.notifications &&
+                        data.notifications.length > 0
+                    ) {
+
+                        [...data.notifications]
+                            .reverse()
+                            .forEach(function (notification) {
+                                showNotification(notification);
+                            });
+
+                    }
+
+                } catch (error) {
+
+                    // A temporary notification failure must not
+                    // interrupt the user's current work.
+                    console.log(
+                        "Notification check:",
+                        error
+                    );
+
+                }
+
+            }
+
+            // Check immediately.
+            checkNotifications();
+
+            // Check for new notifications every five seconds.
+            setInterval(checkNotifications, 5000);
+
+        });
+    </script>
+    {% endif %}
+
+</body>
+</html>
